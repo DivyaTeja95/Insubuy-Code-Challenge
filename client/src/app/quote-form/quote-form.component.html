@@ -1,0 +1,116 @@
+<form name="quote-form" #f="ngForm" (ngSubmit)="f.form.valid && submitForm()">
+  <label for="policyMax">Policy Maximum</label>
+  <select name="policyMax"
+          id="policyMax"
+          [(ngModel)]="model.policyMax" 
+          #policyMax="ngModel" 
+          required>
+    <option value="50">50,000</option>
+    <option value="100">100,000</option>
+    <option value="250">250,000</option>
+    <option value="500">500,000</option>
+  </select><br/>
+  <div *ngIf="f.submitted && policyMax.invalid" class="invalid-input">
+    <div *ngIf="policyMax.errors?.required">policyMax is required</div>
+  </div>
+
+
+  <label for="age">Age</label>
+  <input type="number" 
+          name="age"
+          id="age"
+          placeholder="Choose your age" 
+          required
+          agevalidator
+          [(ngModel)]="model.age" 
+          #age="ngModel"/><br/>
+  <div *ngIf="f.submitted && age.invalid" class="invalid-input">
+    <div *ngIf="age.errors?.required">Age is required</div>
+    <div *ngIf="age.errors?.agevalidator">Age should be greater than 1 and less than 100</div>
+  </div>
+
+  <label for="startDate">Start Date</label>
+  <input type="date" 
+        date-format="MM/DD/YYYY"
+        name="startDate"
+        id="startDate" 
+        placeholder="Start Date" 
+        [(ngModel)]="model.startDate" 
+        #startDate="ngModel"
+        required/><br/>
+  <div *ngIf="f.submitted && startDate.invalid" class="invalid-input">
+      <div *ngIf="startDate.errors?.required">Start Date is required</div>
+  </div>
+
+  <label for="endDate">End Date</label>
+  <input type="date" 
+        date-format="MM/DD/YYYY"
+        name="endDate"
+        id="endDate"
+        placeholder="End Date" 
+        [(ngModel)]="model.endDate" 
+        #endDate="ngModel"/><br/>
+
+  <div *ngIf="f.submitted && startDate.invalid" class="invalid-input">
+      <div *ngIf="startDate.errors?.required">End Date is required</div>
+      <div *ngIf="startDate.errors?.min">End Date is required to be greater </div>
+  </div>
+
+  <label for="citizenship">Citizenship</label>
+  <input type="text" 
+          name="citizenship"
+          id="citizenship" 
+          placeholder="Choose Your country of Citizenship" 
+          [(ngModel)]="model.citizenship" 
+          #citizenship="ngModel"
+          required pattern="[a-zA-Z ]*"/><br/>
+
+  <div *ngIf="f.submitted && citizenship.invalid" class="invalid-input">
+      <div *ngIf="citizenship.errors?.required">citizenship is required</div>
+      <div *ngIf="citizenship.errors?.pattern">Should contain only characters</div>
+  </div>
+  
+  <label for="mailingState">Mailing State</label>
+  <input type="text" 
+          name="mailingState"
+          id="mailingState" 
+          placeholder="Choose State" 
+          [(ngModel)]="model.mailingState" 
+          #mailingState="ngModel"
+          required
+          pattern="[a-zA-Z]*"/><br/>
+  <div *ngIf="f.submitted && mailingState.invalid" class="invalid-input">
+      <div *ngIf="mailingState.errors?.required">Mailing State is required</div>
+      <div *ngIf="mailingState.errors?.pattern">Should contain only characters</div>
+  </div>
+  
+  <button type="submit">
+    <span>GET QUOTES</span>
+  </button>
+
+</form>
+
+<div *ngIf="result != null">
+  <h3>Quotes</h3>
+  <div>
+    <button (click)="sortByName()" >Sort By Name </button>
+    <button (click)="sortByPrice()" >Sort By Price </button>
+  </div>
+  <div>
+    <h5>Filters</h5>
+    <label for="type">Type</label>
+    <input type="text" 
+          name="type"
+          id="type"
+          [(ngModel)]="typeFilter" /><br/>
+
+    <label for="type">Section</label>
+    <input type="text" 
+          name="section"
+          id="section"
+          [(ngModel)]="sectionFilter" /><br/>
+
+  </div>
+  <app-quote *ngFor="let r of (result | typeFilter:typeFilter | sectionFilter:sectionFilter)" [quote]="r"></app-quote>
+
+</div>
